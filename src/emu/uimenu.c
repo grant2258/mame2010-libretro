@@ -28,7 +28,7 @@
 #include <ctype.h>
 
 #include "retromain.h"
-
+#pragma pack (1)
 
 /***************************************************************************
     CONSTANTS

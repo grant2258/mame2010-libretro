@@ -10,6 +10,7 @@
 ###########################################################################
 NATIVE :=0
 
+
 UNAME=$(shell uname -a)
 BUILD_BIN2C ?= 0
 
@@ -65,6 +66,14 @@ CPPONLYFLAGS =
 # flags only used when linking the core emulator
 LDFLAGS =
 LDFLAGSEMULATOR =
+
+
+
+ifneq ($(SANITIZER),)
+   CONLYFLAGS   := -fsanitize=$(SANITIZER) $(CFLAGS)
+   CPPONLYFLAGS := -fsanitize=$(SANITIZER) $(CXXFLAGS)
+   LDFLAGS  := -fsanitize=$(SANITIZER) $(LDFLAGS)
+endif
 
 GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
 ifneq ($(GIT_VERSION)," unknown")
@@ -431,6 +440,8 @@ else ifneq (,$(findstring rpi,$(platform)))
 	CCOMFLAGS += -marm -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
    else ifneq (,$(findstring rpi3, $(platform)))
 	CCOMFLAGS += -marm -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard
+   else ifneq (,$(findstring rpi4, $(platform)))
+	CCOMFLAGS += -march=armv8-a+crc -mtune=cortex-a72 -mfpu=neon-fp-armv8 -mfloat-abi=hard
    endif
 
 # ARM
