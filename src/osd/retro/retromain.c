@@ -8,6 +8,7 @@ mame2010 - libretro port of mame 0.139
 #include "osdepend.h"
 
 #include "emu.h"
+#include "inpttype.h"
 #include "clifront.h"
 #include "render.h"
 #include "ui.h"
@@ -843,11 +844,6 @@ void init_input_descriptors(void)
    environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, desc);
 }
 
-#define PLAYER1_PRESS(button) input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
-#define PLAYER2_PRESS(button) input_state_cb(1, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
-#define PLAYER3_PRESS(button) input_state_cb(2, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
-#define PLAYER4_PRESS(button) input_state_cb(3, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_##button)
-
 #define input_device_item_add_mouse(a,b,c,d,e) input_device_item_add(a,b,c,d,e)
 #define input_device_item_add_kbd(a,b,c,d,e) input_device_item_add(a,b,c,d,e)
 
@@ -919,291 +915,246 @@ static void initInput(running_machine* machine)
    retro_log(RETRO_LOG_INFO, "[MAME 2010] MANUFACTURER: %s\n", machine->gamedrv->manufacturer);
  
 
+ 
+   input_device_item_add(P1_device, "axis 0",     &P1_state[RP_LX],    ITEM_ID_XAXIS,         generic_axis_get_state);
+   input_device_item_add(P1_device, "axis 1",     &P1_state[RP_LY],    ITEM_ID_YAXIS,         generic_axis_get_state);
+   input_device_item_add(P1_device, "axis 2",     &P1_state[RP_RX],    ITEM_ID_RXAXIS,        generic_axis_get_state);
+   input_device_item_add(P1_device, "axis 3",     &P1_state[RP_RY],    ITEM_ID_RYAXIS,        generic_axis_get_state);
+   input_device_item_add(P1_device, "Start",      &P1_state[RP_ST],    ITEM_ID_START,         generic_button_get_state);
+   input_device_item_add(P1_device, "Sel",        &P1_state[RP_SL],    ITEM_ID_SELECT,        generic_button_get_state);
+   input_device_item_add(P1_device, "DPAD UP",    &P1_state[RP_UP],    ITEM_ID_HAT1UP,        generic_button_get_state);
+   input_device_item_add(P1_device, "DPAD DOWN",  &P1_state[RP_DOWN],  ITEM_ID_HAT1DOWN,      generic_button_get_state);
+   input_device_item_add(P1_device, "DPAD Left",  &P1_state[RP_LEFT],  ITEM_ID_HAT1LEFT,      generic_button_get_state);
+   input_device_item_add(P1_device, "DPAD Right", &P1_state[RP_RIGHT], ITEM_ID_HAT1RIGHT,     generic_button_get_state);
 
-   input_device_item_add(P1_device, "RP axis 0", &P1_state[RP_LX],    ITEM_ID_XAXIS,         generic_axis_get_state);
-   input_device_item_add(P1_device, "RP axis 1", &P1_state[RP_LY],    ITEM_ID_YAXIS,         generic_axis_get_state);
-   input_device_item_add(P1_device, "RP axis 2", &P1_state[RP_RX],    ITEM_ID_RXAXIS,        generic_axis_get_state);
-   input_device_item_add(P1_device, "RP axis 3", &P1_state[RP_RY],    ITEM_ID_RYAXIS,        generic_axis_get_state);
-   input_device_item_add(P1_device, "RP Start",  &P1_state[RP_ST],    ITEM_ID_START,         generic_button_get_state);
-   input_device_item_add(P1_device, "RP COIN1",  &P1_state[RP_SL],    ITEM_ID_SELECT,        generic_button_get_state);
-   input_device_item_add(P1_device, "UP",        &P1_state[RP_UP],    ITEM_ID_HAT1UP,        generic_button_get_state);
-   input_device_item_add(P1_device, "Down",      &P1_state[RP_DOWN],  ITEM_ID_HAT1DOWN,      generic_button_get_state);
-   input_device_item_add(P1_device, "Left",      &P1_state[RP_LEFT],  ITEM_ID_HAT1LEFT,      generic_button_get_state);
-   input_device_item_add(P1_device, "Right",     &P1_state[RP_RIGHT], ITEM_ID_HAT1RIGHT,     generic_button_get_state);
+   input_device_item_add(P2_device, "axis 0",     &P2_state[RP_LX],    ITEM_ID_XAXIS,         generic_axis_get_state);
+   input_device_item_add(P2_device, "axis 1",     &P2_state[RP_LY],    ITEM_ID_YAXIS,         generic_axis_get_state);
+   input_device_item_add(P2_device, "axis 2",     &P2_state[RP_RX],    ITEM_ID_RXAXIS,        generic_axis_get_state);
+   input_device_item_add(P2_device, "axis 3",     &P2_state[RP_RY],    ITEM_ID_RYAXIS,        generic_axis_get_state);
+   input_device_item_add(P2_device, "Start",      &P2_state[RP_ST],    ITEM_ID_START,         generic_button_get_state);
+   input_device_item_add(P2_device, "Sel",        &P2_state[RP_SL],    ITEM_ID_SELECT,        generic_button_get_state);
+   input_device_item_add(P2_device, "DPAD UP",    &P2_state[RP_UP],    ITEM_ID_HAT1UP,        generic_button_get_state);
+   input_device_item_add(P2_device, "DPAD Down" , &P2_state[RP_DOWN],  ITEM_ID_HAT1DOWN,      generic_button_get_state);
+   input_device_item_add(P2_device, "DPAD Left",  &P2_state[RP_LEFT],  ITEM_ID_HAT1LEFT,      generic_button_get_state);
+   input_device_item_add(P2_device, "DPAD Right", &P2_state[RP_RIGHT], ITEM_ID_HAT1RIGHT,     generic_button_get_state);
 
-   input_device_item_add(P2_device, "RP axis 0", &P2_state[RP_LX],    ITEM_ID_XAXIS,         generic_axis_get_state);
-   input_device_item_add(P2_device, "RP axis 1", &P2_state[RP_LY],    ITEM_ID_YAXIS,         generic_axis_get_state);
-   input_device_item_add(P2_device, "RP axis 2", &P2_state[RP_RX],    ITEM_ID_RXAXIS,        generic_axis_get_state);
-   input_device_item_add(P2_device, "RP axis 3", &P2_state[RP_RY],    ITEM_ID_RYAXIS,        generic_axis_get_state);
-   input_device_item_add(P2_device, "RP Start",  &P2_state[RP_ST],    ITEM_ID_START,         generic_button_get_state);
-   input_device_item_add(P2_device, "RP Sel",    &P2_state[RP_SL],    ITEM_ID_SELECT,        generic_button_get_state);
-   input_device_item_add(P2_device, "UP",        &P2_state[RP_UP],    ITEM_ID_HAT1UP,        generic_button_get_state);
-   input_device_item_add(P2_device, "Down",      &P2_state[RP_DOWN],  ITEM_ID_HAT1DOWN,      generic_button_get_state);
-   input_device_item_add(P2_device, "Left",      &P2_state[RP_LEFT],  ITEM_ID_HAT1LEFT,      generic_button_get_state);
-   input_device_item_add(P2_device, "Right",     &P2_state[RP_RIGHT], ITEM_ID_HAT1RIGHT,     generic_button_get_state);
+   input_device_item_add(P3_device, "axis 0",     &P3_state[RP_LX],    ITEM_ID_XAXIS,         generic_axis_get_state);
+   input_device_item_add(P3_device, "axis 1",     &P3_state[RP_LY],    ITEM_ID_YAXIS,         generic_axis_get_state);
+   input_device_item_add(P3_device, "axis 2",     &P3_state[RP_RX],    ITEM_ID_RXAXIS,        generic_axis_get_state);
+   input_device_item_add(P3_device, "axis 3",     &P3_state[RP_RY],    ITEM_ID_RYAXIS,        generic_axis_get_state);
+   input_device_item_add(P3_device, "Start",      &P3_state[RP_ST],    ITEM_ID_START,         generic_button_get_state);
+   input_device_item_add(P3_device, "Sel",        &P3_state[RP_SL],    ITEM_ID_SELECT,        generic_button_get_state);
+   input_device_item_add(P3_device, "DPAD UP",    &P3_state[RP_UP],    ITEM_ID_HAT1UP,        generic_button_get_state);
+   input_device_item_add(P3_device, "DPAD Down",  &P3_state[RP_DOWN],  ITEM_ID_HAT1DOWN,      generic_button_get_state);
+   input_device_item_add(P3_device, "DPAD Left",  &P3_state[RP_LEFT],  ITEM_ID_HAT1LEFT,      generic_button_get_state);
+   input_device_item_add(P3_device, "DPAD Right", &P3_state[RP_RIGHT], ITEM_ID_HAT1RIGHT,     generic_button_get_state);
 
-   input_device_item_add(P3_device, "RP axis 0", &P3_state[RP_LX],    ITEM_ID_XAXIS,         generic_axis_get_state);
-   input_device_item_add(P3_device, "RP axis 1", &P3_state[RP_LY],    ITEM_ID_YAXIS,         generic_axis_get_state);
-   input_device_item_add(P3_device, "RP axis 2", &P3_state[RP_RX],    ITEM_ID_RXAXIS,        generic_axis_get_state);
-   input_device_item_add(P3_device, "RP axis 3", &P3_state[RP_RY],    ITEM_ID_RYAXIS,        generic_axis_get_state);
-   input_device_item_add(P3_device, "RP Start",  &P3_state[RP_ST],    ITEM_ID_START,         generic_button_get_state);
-   input_device_item_add(P3_device, "RP Sel",    &P3_state[RP_SL],    ITEM_ID_SELECT,        generic_button_get_state);
-   input_device_item_add(P3_device, "UP",        &P3_state[RP_UP],    ITEM_ID_HAT1UP,        generic_button_get_state);
-   input_device_item_add(P3_device, "Down",      &P3_state[RP_DOWN],  ITEM_ID_HAT1DOWN,      generic_button_get_state);
-   input_device_item_add(P3_device, "Left",      &P3_state[RP_LEFT],  ITEM_ID_HAT1LEFT,      generic_button_get_state);
-   input_device_item_add(P3_device, "Right",     &P3_state[RP_RIGHT], ITEM_ID_HAT1RIGHT,     generic_button_get_state);
-
-   input_device_item_add(P4_device, "RP axis 0", &P4_state[RP_LX],    ITEM_ID_XAXIS,         generic_axis_get_state);
-   input_device_item_add(P4_device, "RP axis 1", &P4_state[RP_LY],    ITEM_ID_YAXIS,         generic_axis_get_state);
-   input_device_item_add(P4_device, "RP axis 2", &P4_state[RP_RX],    ITEM_ID_RXAXIS,        generic_axis_get_state);
-   input_device_item_add(P4_device, "RP axis 3", &P4_state[RP_RY],    ITEM_ID_RYAXIS,        generic_axis_get_state);
-   input_device_item_add(P4_device, "RP Start",  &P4_state[RP_ST],    ITEM_ID_START,         generic_button_get_state);
-   input_device_item_add(P4_device, "RP Sel",    &P4_state[RP_SL],    ITEM_ID_SELECT,        generic_button_get_state);
-   input_device_item_add(P4_device, "UP",        &P4_state[RP_UP],    ITEM_ID_HAT1UP,        generic_button_get_state);
-   input_device_item_add(P4_device, "Down",      &P4_state[RP_DOWN],  ITEM_ID_HAT1DOWN,      generic_button_get_state);
-   input_device_item_add(P4_device, "Left",      &P4_state[RP_LEFT],  ITEM_ID_HAT1LEFT,      generic_button_get_state);
-   input_device_item_add(P4_device, "Right",     &P4_state[RP_RIGHT], ITEM_ID_HAT1RIGHT,     generic_button_get_state);
-
-/* needed for remapping if automapping game is enabled */
-   input_device_item_add(P1_device, "RP B",      &P1_state[RP_B],     ITEM_ID_OTHER_SWITCH ,      generic_button_get_state);
-   input_device_item_add(P1_device, "RP A",      &P1_state[RP_A],     ITEM_ID_OTHER_SWITCH ,      generic_button_get_state);
-   input_device_item_add(P1_device, "RP Y",      &P1_state[RP_Y],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P1_device, "RP X",      &P1_state[RP_X],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P1_device, "RP R",      &P1_state[RP_R],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P1_device, "RP L",      &P1_state[RP_L],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P1_device, "RP R2",     &P1_state[RP_R2],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P1_device, "RP L2",     &P1_state[RP_L2],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P1_device, "RP R3",     &P1_state[RP_R3],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P1_device, "RP L3",     &P1_state[RP_L3],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-
-   input_device_item_add(P2_device, "RP B",      &P2_state[RP_B],     ITEM_ID_OTHER_SWITCH ,      generic_button_get_state);
-   input_device_item_add(P2_device, "RP A",      &P2_state[RP_A],     ITEM_ID_OTHER_SWITCH ,      generic_button_get_state);
-   input_device_item_add(P2_device, "RP Y",      &P2_state[RP_Y],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P2_device, "RP X",      &P2_state[RP_X],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P2_device, "RP R",      &P2_state[RP_R],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P2_device, "RP L",      &P2_state[RP_L],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P2_device, "RP R2",     &P2_state[RP_R2],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P2_device, "RP L2",     &P2_state[RP_L2],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P2_device, "RP R3",     &P2_state[RP_R3],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P2_device, "RP L3",     &P2_state[RP_L3],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-
-   input_device_item_add(P3_device, "RP B",      &P3_state[RP_B],     ITEM_ID_OTHER_SWITCH ,      generic_button_get_state);
-   input_device_item_add(P3_device, "RP A",      &P3_state[RP_A],     ITEM_ID_OTHER_SWITCH ,      generic_button_get_state);
-   input_device_item_add(P3_device, "RP Y",      &P3_state[RP_Y],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P3_device, "RP X",      &P3_state[RP_X],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P3_device, "RP R",      &P3_state[RP_R],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P3_device, "RP L",      &P3_state[RP_L],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P3_device, "RP R2",     &P3_state[RP_R2],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P3_device, "RP L2",     &P3_state[RP_L2],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P3_device, "RP R3",     &P3_state[RP_R3],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P3_device, "RP L3",     &P3_state[RP_L3],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-
-   input_device_item_add(P4_device, "RP B",      &P4_state[RP_B],     ITEM_ID_OTHER_SWITCH ,      generic_button_get_state);
-   input_device_item_add(P4_device, "RP A",      &P4_state[RP_A],     ITEM_ID_OTHER_SWITCH ,      generic_button_get_state);
-   input_device_item_add(P4_device, "RP Y",      &P4_state[RP_Y],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P4_device, "RP X",      &P4_state[RP_X],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P4_device, "RP R",      &P4_state[RP_R],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P4_device, "RP L",      &P4_state[RP_L],     ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P4_device, "RP R2",     &P4_state[RP_R2],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P4_device, "RP L2",     &P4_state[RP_L2],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P4_device, "RP R3",     &P4_state[RP_R3],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
-   input_device_item_add(P4_device, "RP L3",     &P4_state[RP_L3],    ITEM_ID_OTHER_SWITCH,       generic_button_get_state);
+   input_device_item_add(P4_device, "axis 0",     &P4_state[RP_LX],    ITEM_ID_XAXIS,         generic_axis_get_state);
+   input_device_item_add(P4_device, "axis 1",     &P4_state[RP_LY],    ITEM_ID_YAXIS,         generic_axis_get_state);
+   input_device_item_add(P4_device, "axis 2",     &P4_state[RP_RX],    ITEM_ID_RXAXIS,        generic_axis_get_state);
+   input_device_item_add(P4_device, "axis 3",     &P4_state[RP_RY],    ITEM_ID_RYAXIS,        generic_axis_get_state);
+   input_device_item_add(P4_device, "Start",      &P4_state[RP_ST],    ITEM_ID_START,         generic_button_get_state);
+   input_device_item_add(P4_device, "Sel",        &P4_state[RP_SL],    ITEM_ID_SELECT,        generic_button_get_state);
+   input_device_item_add(P4_device, "DPAD UP",    &P4_state[RP_UP],    ITEM_ID_HAT1UP,        generic_button_get_state);
+   input_device_item_add(P4_device, "DPAD Down",  &P4_state[RP_DOWN],  ITEM_ID_HAT1DOWN,      generic_button_get_state);
+   input_device_item_add(P4_device, "DPAD Left",  &P4_state[RP_LEFT],  ITEM_ID_HAT1LEFT,      generic_button_get_state);
+   input_device_item_add(P4_device, "DPAD Right", &P4_state[RP_RIGHT], ITEM_ID_HAT1RIGHT,     generic_button_get_state);
 
 
    if ( ( TEKKEN_LAYOUT ) && (use_auto_mapping) )	/* Tekken 1/2 */
    {
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P1_device, "RP A", &P1_state[RP_A], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "A", &P1_state[RP_A], ITEM_ID_BUTTON4, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P2_device, "RP A", &P2_state[RP_A], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "A", &P2_state[RP_A], ITEM_ID_BUTTON4, generic_button_get_state);
    }
    else if ( ( SOULEDGE_LAYOUT ) && (use_auto_mapping) )    /* Soul Edge / Soul Calibur */   
    {
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP A", &P1_state[RP_A], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "A", &P1_state[RP_A], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP A", &P2_state[RP_A], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "A", &P2_state[RP_A], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
    }
    else if ( ( DOA_LAYOUT ) && (use_auto_mapping) )      /* Dead or Alive++ */
    {
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
    }
    else if ( ( VF_LAYOUT ) && (use_auto_mapping) )      /* Virtua Fighter */
    {
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON3, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON3, generic_button_get_state);
    }
    else if ( ( EHRGEIZ_LAYOUT ) && (use_auto_mapping) )     /* Ehrgeiz */
    {
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP A", &P1_state[RP_A], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "A", &P1_state[RP_A], ITEM_ID_BUTTON3, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP A", &P2_state[RP_A], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "A", &P2_state[RP_A], ITEM_ID_BUTTON3, generic_button_get_state);
    }
    else if ( ( TS2_LAYOUT ) && (use_auto_mapping) )     /* Toshinden 2 */
    {
-      input_device_item_add(P1_device, "RP L", &P1_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_Y], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P1_device, "RP R", &P1_state[RP_R], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P1_device, "RP A", &P1_state[RP_A], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P1_device, "L", &P1_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_Y], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "R", &P1_state[RP_R], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P1_device, "A", &P1_state[RP_A], ITEM_ID_BUTTON6, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP L", &P2_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P2_device, "RP R", &P2_state[RP_R], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P2_device, "RP A", &P2_state[RP_A], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P2_device, "L", &P2_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "R", &P2_state[RP_R], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P2_device, "A", &P2_state[RP_A], ITEM_ID_BUTTON6, generic_button_get_state);
    }
    else if ( ( SF_LAYOUT  ) && (use_auto_mapping) )     /* Capcom 6-button fighting games */
    {
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP L", &P1_state[RP_L], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P1_device, "RP A", &P1_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P1_device, "RP R", &P1_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "L", &P1_state[RP_L], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P1_device, "A", &P1_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P1_device, "R", &P1_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP L", &P2_state[RP_L], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P2_device, "RP A", &P2_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P2_device, "PR R", &P2_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "L", &P2_state[RP_L], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P2_device, "A", &P2_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P2_device, "R", &P2_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
    }
  
    else if ( ( KINST_LAYOUT ) && (use_auto_mapping) )     /* Killer Instinct 1 */
    {
-      input_device_item_add(P1_device, "RP L", &P1_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P1_device, "RP R", &P1_state[RP_R], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P1_device, "RP A", &P1_state[RP_A], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P1_device, "L", &P1_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "R", &P1_state[RP_R], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P1_device, "A", &P1_state[RP_A], ITEM_ID_BUTTON6, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP L", &P2_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P2_device, "RP R", &P2_state[RP_R], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P2_device, "RP A", &P2_state[RP_A], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P2_device, "L", &P2_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "R", &P2_state[RP_R], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P2_device, "A", &P2_state[RP_A], ITEM_ID_BUTTON6, generic_button_get_state);
    }
    else if ( ( KINST2_LAYOUT  ) && (use_auto_mapping) )     /* Killer Instinct 2 */
    {
-      input_device_item_add(P1_device, "RP L", &P1_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P1_device, "RP A", &P1_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P1_device, "RP R", &P1_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P1_device, "L", &P1_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P1_device, "A", &P1_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P1_device, "R", &P1_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP L", &P2_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P2_device, "RP A", &P2_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P2_device, "RP R", &P2_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P2_device, "L", &P2_state[RP_L], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P2_device, "A", &P2_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P2_device, "R", &P2_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
    }
    else if ( ( TEKKEN3_LAYOUT  ) && (use_auto_mapping) )     /* Tekken 3 / Tekken Tag Tournament */
    {
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP R", &P1_state[RP_R], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P1_device, "RP A", &P1_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "R", &P1_state[RP_R], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P1_device, "A", &P1_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP R", &P2_state[RP_R], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P2_device, "RP A", &P2_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "R", &P2_state[RP_R], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P2_device, "A", &P2_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
    }
    else if ( ( MK_LAYOUT ) &&  (use_auto_mapping) )     /* Mortal Kombat 1/2/3 / Ultimate/WWF: Wrestlemania */
    {
-      input_device_item_add(P1_device, "RP Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P1_device, "RP L", &P1_state[RP_L], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P1_device, "RP X", &P1_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P1_device, "RP B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P1_device, "RP A", &P1_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P1_device, "RP R", &P1_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P1_device, "Y", &P1_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P1_device, "L", &P1_state[RP_L], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P1_device, "X", &P1_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P1_device, "B", &P1_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P1_device, "A", &P1_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P1_device, "R", &P1_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
-      input_device_item_add(P2_device, "RP L", &P2_state[RP_L], ITEM_ID_BUTTON2, generic_button_get_state);
-      input_device_item_add(P2_device, "RP X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
-      input_device_item_add(P2_device, "RP B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
-      input_device_item_add(P2_device, "RP A", &P2_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
-      input_device_item_add(P2_device, "RP R", &P2_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
+      input_device_item_add(P2_device, "Y", &P2_state[RP_Y], ITEM_ID_BUTTON1, generic_button_get_state);
+      input_device_item_add(P2_device, "L", &P2_state[RP_L], ITEM_ID_BUTTON2, generic_button_get_state);
+      input_device_item_add(P2_device, "X", &P2_state[RP_X], ITEM_ID_BUTTON3, generic_button_get_state);
+      input_device_item_add(P2_device, "B", &P2_state[RP_B], ITEM_ID_BUTTON4, generic_button_get_state);
+      input_device_item_add(P2_device, "A", &P2_state[RP_A], ITEM_ID_BUTTON5, generic_button_get_state);
+      input_device_item_add(P2_device, "R", &P2_state[RP_R], ITEM_ID_BUTTON6, generic_button_get_state);
    }
    else
    {
-      input_device_item_add(P1_device, "RP B",      &P1_state[RP_B],     ITEM_ID_BUTTON1 ,      generic_button_get_state);
-      input_device_item_add(P1_device, "RP A",      &P1_state[RP_A],     ITEM_ID_BUTTON2 ,      generic_button_get_state);
-      input_device_item_add(P1_device, "RP Y",      &P1_state[RP_Y],     ITEM_ID_BUTTON3,       generic_button_get_state);
-      input_device_item_add(P1_device, "RP X",      &P1_state[RP_X],     ITEM_ID_BUTTON4,       generic_button_get_state);
-      input_device_item_add(P1_device, "RP R",      &P1_state[RP_R],     ITEM_ID_BUTTON5,       generic_button_get_state);
-      input_device_item_add(P1_device, "RP L",      &P1_state[RP_L],     ITEM_ID_BUTTON6,       generic_button_get_state);
-      input_device_item_add(P1_device, "RP R2",     &P1_state[RP_R2],    ITEM_ID_BUTTON7,       generic_button_get_state);
-      input_device_item_add(P1_device, "RP L2",     &P1_state[RP_L2],    ITEM_ID_BUTTON8,       generic_button_get_state);
-      input_device_item_add(P1_device, "RP R3",     &P1_state[RP_R3],    ITEM_ID_BUTTON9,       generic_button_get_state);
-      input_device_item_add(P1_device, "RP L3",     &P1_state[RP_L3],    ITEM_ID_BUTTON10,      generic_button_get_state);
+      input_device_item_add(P1_device, "B",      &P1_state[RP_B],     ITEM_ID_BUTTON1 ,      generic_button_get_state);
+      input_device_item_add(P1_device, "A",      &P1_state[RP_A],     ITEM_ID_BUTTON2 ,      generic_button_get_state);
+      input_device_item_add(P1_device, "Y",      &P1_state[RP_Y],     ITEM_ID_BUTTON3,       generic_button_get_state);
+      input_device_item_add(P1_device, "X",      &P1_state[RP_X],     ITEM_ID_BUTTON4,       generic_button_get_state);
+      input_device_item_add(P1_device, "R",      &P1_state[RP_R],     ITEM_ID_BUTTON5,       generic_button_get_state);
+      input_device_item_add(P1_device, "L",      &P1_state[RP_L],     ITEM_ID_BUTTON6,       generic_button_get_state);
+      input_device_item_add(P1_device, "R2",     &P1_state[RP_R2],    ITEM_ID_BUTTON7,       generic_button_get_state);
+      input_device_item_add(P1_device, "L2",     &P1_state[RP_L2],    ITEM_ID_BUTTON8,       generic_button_get_state);
+      input_device_item_add(P1_device, "R3",     &P1_state[RP_R3],    ITEM_ID_BUTTON9,       generic_button_get_state);
+      input_device_item_add(P1_device, "L3",     &P1_state[RP_L3],    ITEM_ID_BUTTON10,      generic_button_get_state);
 
-      input_device_item_add(P2_device, "RP B",      &P2_state[RP_B],     ITEM_ID_BUTTON1 ,      generic_button_get_state);
-      input_device_item_add(P2_device, "RP A",      &P2_state[RP_A],     ITEM_ID_BUTTON2 ,      generic_button_get_state);
-      input_device_item_add(P2_device, "RP Y",      &P2_state[RP_Y],     ITEM_ID_BUTTON3,       generic_button_get_state);
-      input_device_item_add(P2_device, "RP X",      &P2_state[RP_X],     ITEM_ID_BUTTON4,       generic_button_get_state);
-      input_device_item_add(P2_device, "RP R",      &P2_state[RP_R],     ITEM_ID_BUTTON5,       generic_button_get_state);
-      input_device_item_add(P2_device, "RP L",      &P2_state[RP_L],     ITEM_ID_BUTTON6,       generic_button_get_state);
-      input_device_item_add(P2_device, "RP R2",     &P2_state[RP_R2],    ITEM_ID_BUTTON7,       generic_button_get_state);
-      input_device_item_add(P2_device, "RP L2",     &P2_state[RP_L2],    ITEM_ID_BUTTON8,       generic_button_get_state);
-      input_device_item_add(P2_device, "RP R3",     &P2_state[RP_R3],    ITEM_ID_BUTTON9,       generic_button_get_state);
-      input_device_item_add(P2_device, "RP L3",     &P2_state[RP_L3],    ITEM_ID_BUTTON10,      generic_button_get_state);
+      input_device_item_add(P2_device, "B",      &P2_state[RP_B],     ITEM_ID_BUTTON1 ,      generic_button_get_state);
+      input_device_item_add(P2_device, "A",      &P2_state[RP_A],     ITEM_ID_BUTTON2 ,      generic_button_get_state);
+      input_device_item_add(P2_device, "Y",      &P2_state[RP_Y],     ITEM_ID_BUTTON3,       generic_button_get_state);
+      input_device_item_add(P2_device, "X",      &P2_state[RP_X],     ITEM_ID_BUTTON4,       generic_button_get_state);
+      input_device_item_add(P2_device, "R",      &P2_state[RP_R],     ITEM_ID_BUTTON5,       generic_button_get_state);
+      input_device_item_add(P2_device, "L",      &P2_state[RP_L],     ITEM_ID_BUTTON6,       generic_button_get_state);
+      input_device_item_add(P2_device, "R2",     &P2_state[RP_R2],    ITEM_ID_BUTTON7,       generic_button_get_state);
+      input_device_item_add(P2_device, "L2",     &P2_state[RP_L2],    ITEM_ID_BUTTON8,       generic_button_get_state);
+      input_device_item_add(P2_device, "R3",     &P2_state[RP_R3],    ITEM_ID_BUTTON9,       generic_button_get_state);
+      input_device_item_add(P2_device, "L3",     &P2_state[RP_L3],    ITEM_ID_BUTTON10,      generic_button_get_state);
 
-      input_device_item_add(P3_device, "RP B",      &P3_state[RP_B],     ITEM_ID_BUTTON1 ,      generic_button_get_state);
-      input_device_item_add(P3_device, "RP A",      &P3_state[RP_A],     ITEM_ID_BUTTON2 ,      generic_button_get_state);
-      input_device_item_add(P3_device, "RP Y",      &P3_state[RP_Y],     ITEM_ID_BUTTON3,       generic_button_get_state);
-      input_device_item_add(P3_device, "RP X",      &P3_state[RP_X],     ITEM_ID_BUTTON4,       generic_button_get_state);
-      input_device_item_add(P3_device, "RP R",      &P3_state[RP_R],     ITEM_ID_BUTTON5,       generic_button_get_state);
-      input_device_item_add(P3_device, "RP L",      &P3_state[RP_L],     ITEM_ID_BUTTON6,       generic_button_get_state);
-      input_device_item_add(P3_device, "RP R2",     &P3_state[RP_R2],    ITEM_ID_BUTTON7,       generic_button_get_state);
-      input_device_item_add(P3_device, "RP L2",     &P3_state[RP_L2],    ITEM_ID_BUTTON8,       generic_button_get_state);
-      input_device_item_add(P3_device, "RP R3",     &P3_state[RP_R3],    ITEM_ID_BUTTON9,       generic_button_get_state);
-      input_device_item_add(P3_device, "RP L3",     &P3_state[RP_L3],    ITEM_ID_BUTTON10,      generic_button_get_state);
+      input_device_item_add(P3_device, "B",      &P3_state[RP_B],     ITEM_ID_BUTTON1 ,      generic_button_get_state);
+      input_device_item_add(P3_device, "A",      &P3_state[RP_A],     ITEM_ID_BUTTON2 ,      generic_button_get_state);
+      input_device_item_add(P3_device, "Y",      &P3_state[RP_Y],     ITEM_ID_BUTTON3,       generic_button_get_state);
+      input_device_item_add(P3_device, "X",      &P3_state[RP_X],     ITEM_ID_BUTTON4,       generic_button_get_state);
+      input_device_item_add(P3_device, "R",      &P3_state[RP_R],     ITEM_ID_BUTTON5,       generic_button_get_state);
+      input_device_item_add(P3_device, "L",      &P3_state[RP_L],     ITEM_ID_BUTTON6,       generic_button_get_state);
+      input_device_item_add(P3_device, "R2",     &P3_state[RP_R2],    ITEM_ID_BUTTON7,       generic_button_get_state);
+      input_device_item_add(P3_device, "L2",     &P3_state[RP_L2],    ITEM_ID_BUTTON8,       generic_button_get_state);
+      input_device_item_add(P3_device, "R3",     &P3_state[RP_R3],    ITEM_ID_BUTTON9,       generic_button_get_state);
+      input_device_item_add(P3_device, "L3",     &P3_state[RP_L3],    ITEM_ID_BUTTON10,      generic_button_get_state);
 
-      input_device_item_add(P4_device, "RP B",      &P4_state[RP_B],     ITEM_ID_BUTTON1 ,      generic_button_get_state);
-      input_device_item_add(P4_device, "RP A",      &P4_state[RP_A],     ITEM_ID_BUTTON2 ,      generic_button_get_state);
-      input_device_item_add(P4_device, "RP Y",      &P4_state[RP_Y],     ITEM_ID_BUTTON3,       generic_button_get_state);
-      input_device_item_add(P4_device, "RP X",      &P4_state[RP_X],     ITEM_ID_BUTTON4,       generic_button_get_state);
-      input_device_item_add(P4_device, "RP R",      &P4_state[RP_R],     ITEM_ID_BUTTON5,       generic_button_get_state);
-      input_device_item_add(P4_device, "RP L",      &P4_state[RP_L],     ITEM_ID_BUTTON6,       generic_button_get_state);
-      input_device_item_add(P4_device, "RP R2",     &P4_state[RP_R2],    ITEM_ID_BUTTON7,       generic_button_get_state);
-      input_device_item_add(P4_device, "RP L2",     &P4_state[RP_L2],    ITEM_ID_BUTTON8,       generic_button_get_state);
-      input_device_item_add(P4_device, "RP R3",     &P4_state[RP_R3],    ITEM_ID_BUTTON9,       generic_button_get_state);
-      input_device_item_add(P4_device, "RP L3",     &P4_state[RP_L3],    ITEM_ID_BUTTON10,      generic_button_get_state);
+      input_device_item_add(P4_device, "B",      &P4_state[RP_B],     ITEM_ID_BUTTON1 ,      generic_button_get_state);
+      input_device_item_add(P4_device, "A",      &P4_state[RP_A],     ITEM_ID_BUTTON2 ,      generic_button_get_state);
+      input_device_item_add(P4_device, "Y",      &P4_state[RP_Y],     ITEM_ID_BUTTON3,       generic_button_get_state);
+      input_device_item_add(P4_device, "X",      &P4_state[RP_X],     ITEM_ID_BUTTON4,       generic_button_get_state);
+      input_device_item_add(P4_device, "R",      &P4_state[RP_R],     ITEM_ID_BUTTON5,       generic_button_get_state);
+      input_device_item_add(P4_device, "L",      &P4_state[RP_L],     ITEM_ID_BUTTON6,       generic_button_get_state);
+      input_device_item_add(P4_device, "R2",     &P4_state[RP_R2],    ITEM_ID_BUTTON7,       generic_button_get_state);
+      input_device_item_add(P4_device, "L2",     &P4_state[RP_L2],    ITEM_ID_BUTTON8,       generic_button_get_state);
+      input_device_item_add(P4_device, "R3",     &P4_state[RP_R3],    ITEM_ID_BUTTON9,       generic_button_get_state);
+      input_device_item_add(P4_device, "L3",     &P4_state[RP_L3],    ITEM_ID_BUTTON10,      generic_button_get_state);
    }
 
    retrokbd_device = input_device_add(machine, DEVICE_CLASS_KEYBOARD, "Retrokdb", NULL);
@@ -1560,6 +1511,13 @@ int executeGame(char* path) {
 	return result;
 }
 
+
+
+void osd_customize_input_type_list(input_type_desc *typelist)
+{
+// add this functionality back for any changes needed
+
+}
 //============================================================
 //  mmain
 //============================================================
