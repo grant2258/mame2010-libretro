@@ -1513,11 +1513,6 @@ int executeGame(char* path) {
 
 
 
-void osd_customize_input_type_list(input_type_desc *typelist)
-{
-// add this functionality back for any changes needed
-
-}
 //============================================================
 //  mmain
 //============================================================
