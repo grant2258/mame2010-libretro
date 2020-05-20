@@ -1312,10 +1312,10 @@ astring &input_code_name(running_machine *machine, astring &string, input_code c
 	modifier = code_to_string(modifier_string_table, INPUT_CODE_MODIFIER(code));
 
 	/* devcode is redundant with joystick switch left/right/up/down */
-/*	if (item->devclass == DEVICE_CLASS_JOYSTICK && INPUT_CODE_ITEMCLASS(code) == ITEM_CLASS_SWITCH)
+	if (item->devclass == DEVICE_CLASS_JOYSTICK && INPUT_CODE_ITEMCLASS(code) == ITEM_CLASS_SWITCH)
 		if (INPUT_CODE_MODIFIER(code) >= ITEM_MODIFIER_LEFT && INPUT_CODE_MODIFIER(code) <= ITEM_MODIFIER_DOWN)
 			devcode = "";
-*/
+
 
 	/* concatenate the strings */
 	string.cpy(devclass);
