@@ -1316,6 +1316,7 @@ astring &input_code_name(running_machine *machine, astring &string, input_code c
 		if (INPUT_CODE_MODIFIER(code) >= ITEM_MODIFIER_LEFT && INPUT_CODE_MODIFIER(code) <= ITEM_MODIFIER_DOWN)
 			devcode = "";
 
+
 	/* concatenate the strings */
 	string.cpy(devclass);
 	if (devindex[0] != 0)
